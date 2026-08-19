@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로또 번호 추천</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Noto Sans KR", Arial, sans-serif;
+      background: linear-gradient(135deg, #f7f9fc, #e8eef7);
+      color: #202733;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 760px;
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px 28px;
+      box-shadow: 0 18px 50px rgba(35, 52, 75, 0.12);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 38px;
+      letter-spacing: -2px;
+    }
+
+    .subtitle {
+      margin: 12px 0 30px;
+      color: #7b8492;
+      font-size: 15px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    select, button {
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 18px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    select {
+      background: #f1f4f8;
+      color: #303946;
+      cursor: pointer;
+    }
+
+    button {
+      background: #202733;
+      color: white;
+      cursor: pointer;
+      transition: transform .15s, opacity .15s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: .9;
+    }
+
+    .sets {
+      display: grid;
+      gap: 14px;
+    }
+
+    .lotto-set {
+      background: #f8fafc;
+      border: 1px solid #e8edf3;
+      border-radius: 18px;
+      padding: 18px 12px;
+    }
+
+    .set-title {
+      font-size: 14px;
+      color: #7b8492;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .numbers {
+      display: flex;
+      justify-content: center;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .ball {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 17px;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,.12);
+    }
+
+    .yellow { background: #f3b51b; }
+    .blue { background: #3d82df; }
+    .red { background: #e85c5c; }
+    .gray { background: #7d8794; }
+    .green { background: #45ad69; }
+
+    .empty {
+      padding: 55px 20px;
+      color: #9aa3ae;
+      background: #f8fafc;
+      border-radius: 18px;
+    }
+
+    .notice {
+      margin-top: 24px;
+      color: #9aa3ae;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 520px) {
+      .container { padding: 30px 18px; }
+      h1 { font-size: 31px; }
+      .ball { width: 43px; height: 43px; font-size: 15px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>🎱 로또 번호 추천</h1>
+    <p class="subtitle">버튼을 누르면 1~45 중에서 행운의 번호를 추천해 드립니다.</p>
+
+    <div class="controls">
+      <select id="count">
+        <option value="1">1게임</option>
+        <option value="3">3게임</option>
+        <option value="5" selected>5게임</option>
+        <option value="10">10게임</option>
+      </select>
+
+      <button onclick="recommend()">✨ 번호 추천받기</button>
+    </div>
+
+    <section id="result">
+      <div class="empty">
+        버튼을 눌러 로또 번호를 추천받아 보세요!
+      </div>
+    </section>
+
+    <p class="notice">
+      추천 번호는 무작위로 생성됩니다.<br>
+      실제 당첨을 보장하지 않으며 재미와 참고용으로 이용해 주세요.
+    </p>
+  </main>
+
+  <script>
+    function getRandomNumbers() {
+      const numbers = [];
+
+      while (numbers.length < 6) {
+        const number = Math.floor(Math.random() * 45) + 1;
+
+        if (!numbers.includes(number)) {
+          numbers.push(number);
+        }
+      }
+
+      return numbers.sort((a, b) => a - b);
+    }
+
+    function getBallColor(number) {
+      if (number <= 10) return "yellow";
+      if (number <= 20) return "blue";
+      if (number <= 30) return "red";
+      if (number <= 40) return "gray";
+      return "green";
+    }
+
+    function recommend() {
+      const count = Number(document.getElementById("count").value);
+      const result = document.getElementById("result");
+
+      result.innerHTML = '<div class="sets"></div>';
+      const sets = result.querySelector(".sets");
+
+      for (let i = 1; i <= count; i++) {
+        const numbers = getRandomNumbers();
+
+        const set = document.createElement("div");
+        set.className = "lotto-set";
+
+        const title = document.createElement("div");
+        title.className = "set-title";
+        title.textContent = `${i}번째 추천 번호`;
+
+        const numberBox = document.createElement("div");
+        numberBox.className = "numbers";
+
+        numbers.forEach(number => {
+          const ball = document.createElement("span");
+          ball.className = `ball ${getBallColor(number)}`;
+          ball.textContent = number;
+          numberBox.appendChild(ball);
+        });
+
+        set.appendChild(title);
+        set.appendChild(numberBox);
+        sets.appendChild(set);
+      }
+    }
+  </script>
+</body>
+</html>
