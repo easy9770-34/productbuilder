@@ -1,78 +1,185 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>로또 번호 추천</title>
+  <title>로또 번호 추천기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
+    :root {
+      --bg-gradient: linear-gradient(135deg, #f0f4f9 0%, #e2e8f0 100%);
+      --container-bg: #ffffff;
+      --container-border: rgba(226, 232, 240, 0.8);
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --card-bg: #f8fafc;
+      --card-border: #e2e8f0;
+      --control-bg: #f1f5f9;
+      --control-border: #cbd5e1;
+      --control-text: #334155;
+      --btn-primary-bg: #2563eb;
+      --btn-primary-hover: #1d4ed8;
+      --btn-primary-text: #ffffff;
+      --btn-primary-shadow: rgba(37, 99, 235, 0.25);
+      --theme-btn-bg: #f1f5f9;
+      --theme-btn-border: #e2e8f0;
+      --theme-btn-text: #475569;
+      --container-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08), 0 0 1px 1px rgba(0, 0, 0, 0.02);
+      --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e1b4b 100%);
+      --container-bg: #131d31;
+      --container-border: #243048;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --card-bg: #17233d;
+      --card-border: #243453;
+      --control-bg: #1e293b;
+      --control-border: #334155;
+      --control-text: #f1f5f9;
+      --btn-primary-bg: #3b82f6;
+      --btn-primary-hover: #60a5fa;
+      --btn-primary-text: #ffffff;
+      --btn-primary-shadow: rgba(59, 130, 246, 0.35);
+      --theme-btn-bg: #1e293b;
+      --theme-btn-border: #334155;
+      --theme-btn-text: #e2e8f0;
+      --container-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      margin: 0;
       min-height: 100vh;
-      font-family: "Noto Sans KR", Arial, sans-serif;
-      background: linear-gradient(135deg, #f7f9fc, #e8eef7);
-      color: #202733;
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-primary);
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 24px;
+      padding: 24px 16px;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .container {
       width: 100%;
-      max-width: 760px;
-      background: #fff;
-      border-radius: 24px;
-      padding: 40px 28px;
-      box-shadow: 0 18px 50px rgba(35, 52, 75, 0.12);
+      max-width: 720px;
+      background: var(--container-bg);
+      border: 1px solid var(--container-border);
+      border-radius: 28px;
+      padding: 40px 32px;
+      box-shadow: var(--container-shadow);
       text-align: center;
+      position: relative;
+      transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 8px;
+    }
+
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--theme-btn-bg);
+      color: var(--theme-btn-text);
+      border: 1px solid var(--theme-btn-border);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      transform: scale(1.03);
+      filter: brightness(1.05);
+    }
+
+    .theme-toggle-btn .icon {
+      font-size: 16px;
+      line-height: 1;
     }
 
     h1 {
-      margin: 0;
-      font-size: 38px;
-      letter-spacing: -2px;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      color: var(--text-primary);
     }
 
     .subtitle {
-      margin: 12px 0 30px;
-      color: #7b8492;
+      color: var(--text-secondary);
       font-size: 15px;
+      margin-bottom: 30px;
     }
 
     .controls {
       display: flex;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 28px;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
       flex-wrap: wrap;
     }
 
-    select, button {
-      border: 0;
-      border-radius: 12px;
-      padding: 13px 18px;
+    select {
+      background: var(--control-bg);
+      color: var(--control-text);
+      border: 1px solid var(--control-border);
+      border-radius: 14px;
+      padding: 13px 20px;
       font-size: 15px;
       font-weight: 700;
-    }
-
-    select {
-      background: #f1f4f8;
-      color: #303946;
       cursor: pointer;
+      outline: none;
+      transition: all 0.2s ease;
     }
 
-    button {
-      background: #202733;
-      color: white;
+    select:focus {
+      border-color: var(--btn-primary-bg);
+    }
+
+    .btn-recommend {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 28px;
+      font-size: 15px;
+      font-weight: 700;
       cursor: pointer;
-      transition: transform .15s, opacity .15s;
+      box-shadow: 0 4px 14px var(--btn-primary-shadow);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    button:hover {
+    .btn-recommend:hover {
       transform: translateY(-2px);
-      opacity: .9;
+      box-shadow: 0 6px 20px var(--btn-primary-shadow);
+      filter: brightness(1.08);
+    }
+
+    .btn-recommend:active {
+      transform: translateY(0);
     }
 
     .sets {
@@ -81,23 +188,39 @@
     }
 
     .lotto-set {
-      background: #f8fafc;
-      border: 1px solid #e8edf3;
-      border-radius: 18px;
-      padding: 18px 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px 16px;
+      box-shadow: var(--card-shadow);
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .set-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding: 0 6px;
     }
 
     .set-title {
       font-size: 14px;
-      color: #7b8492;
-      margin-bottom: 12px;
+      color: var(--text-secondary);
       font-weight: 700;
+    }
+
+    .set-sum {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
     }
 
     .numbers {
       display: flex;
       justify-content: center;
-      gap: 9px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
@@ -108,80 +231,179 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
-      font-weight: 900;
+      color: #ffffff;
+      font-weight: 800;
       font-size: 17px;
-      box-shadow: inset 0 -3px 0 rgba(0,0,0,.12);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.35), inset 0 -3px 4px rgba(0, 0, 0, 0.2);
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
     }
 
-    .yellow { background: #f3b51b; }
-    .blue { background: #3d82df; }
-    .red { background: #e85c5c; }
-    .gray { background: #7d8794; }
-    .green { background: #45ad69; }
+    /* 번호대별 공식 로또 색상 테마 (3D 그라데이션) */
+    .ball.yellow {
+      background: radial-gradient(circle at 35% 35%, #fcd34d 0%, #f59e0b 60%, #b45309 100%);
+    }
+    .ball.blue {
+      background: radial-gradient(circle at 35% 35%, #60a5fa 0%, #2563eb 60%, #1d4ed8 100%);
+    }
+    .ball.red {
+      background: radial-gradient(circle at 35% 35%, #f87171 0%, #dc2626 60%, #991b1b 100%);
+    }
+    .ball.gray {
+      background: radial-gradient(circle at 35% 35%, #94a3b8 0%, #64748b 60%, #334155 100%);
+    }
+    .ball.green {
+      background: radial-gradient(circle at 35% 35%, #4ade80 0%, #16a34a 60%, #15803d 100%);
+    }
 
     .empty {
       padding: 55px 20px;
-      color: #9aa3ae;
-      background: #f8fafc;
-      border-radius: 18px;
+      color: var(--text-muted);
+      background: var(--card-bg);
+      border: 1px dashed var(--card-border);
+      border-radius: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
     }
 
     .notice {
-      margin-top: 24px;
-      color: #9aa3ae;
+      margin-top: 26px;
+      color: var(--text-muted);
       font-size: 12px;
-      line-height: 1.6;
+      line-height: 1.7;
+    }
+
+    @keyframes popIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(-15deg);
+      }
+      70% {
+        transform: scale(1.1) rotate(5deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @media (max-width: 520px) {
-      .container { padding: 30px 18px; }
-      h1 { font-size: 31px; }
-      .ball { width: 43px; height: 43px; font-size: 15px; }
+      .container {
+        padding: 28px 18px;
+        border-radius: 22px;
+      }
+      h1 { font-size: 28px; }
+      .ball {
+        width: 42px;
+        height: 42px;
+        font-size: 15px;
+      }
+      .controls {
+        gap: 8px;
+      }
+      .btn-recommend, select {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
 
 <body>
   <main class="container">
+    <div class="header-bar">
+      <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="테마 전환" onclick="toggleTheme()">
+        <span class="icon" id="themeIcon">🌙</span>
+        <span id="themeText">다크 모드</span>
+      </button>
+    </div>
+
     <h1>🎱 로또 번호 추천</h1>
-    <p class="subtitle">버튼을 누르면 1~45 중에서 행운의 번호를 추천해 드립니다.</p>
+    <p class="subtitle">1~45 중 행운의 번호를 빠르고 공정하게 추천해 드립니다.</p>
 
     <div class="controls">
-      <select id="count">
+      <select id="count" aria-label="추천 게임 수 선택">
         <option value="1">1게임</option>
         <option value="3">3게임</option>
         <option value="5" selected>5게임</option>
         <option value="10">10게임</option>
       </select>
 
-      <button onclick="recommend()">✨ 번호 추천받기</button>
+      <button class="btn-recommend" type="button" onclick="recommend()">
+        <span>✨</span> 번호 추천받기
+      </button>
     </div>
 
     <section id="result">
       <div class="empty">
-        버튼을 눌러 로또 번호를 추천받아 보세요!
+        ✨ <strong>번호 추천받기</strong> 버튼을 누르면 추천 번호가 생성됩니다!
       </div>
     </section>
 
     <p class="notice">
-      추천 번호는 무작위로 생성됩니다.<br>
-      실제 당첨을 보장하지 않으며 재미와 참고용으로 이용해 주세요.
+      💡 추천 번호는 무작위 난수 알고리즘으로 생성됩니다.<br>
+      당첨을 보장하지 않으며 재미와 참고용으로 즐겨주세요.
     </p>
   </main>
 
   <script>
+    // Theme Management
+    const htmlElement = document.documentElement;
+    const themeIcon = document.getElementById("themeIcon");
+    const themeText = document.getElementById("themeText");
+
+    function applyTheme(theme) {
+      htmlElement.setAttribute("data-theme", theme);
+      localStorage.setItem("lotto-theme", theme);
+
+      if (theme === "dark") {
+        themeIcon.textContent = "☀️";
+        themeText.textContent = "라이트 모드";
+      } else {
+        themeIcon.textContent = "🌙";
+        themeText.textContent = "다크 모드";
+      }
+    }
+
+    function toggleTheme() {
+      const currentTheme = htmlElement.getAttribute("data-theme");
+      const nextTheme = currentTheme === "dark" ? "light" : "dark";
+      applyTheme(nextTheme);
+    }
+
+    // Initialize Theme
+    (function initTheme() {
+      const savedTheme = localStorage.getItem("lotto-theme");
+      if (savedTheme) {
+        applyTheme(savedTheme);
+      } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        applyTheme("dark");
+      } else {
+        applyTheme("light");
+      }
+    })();
+
+    // Random Number Generator
     function getRandomNumbers() {
       const numbers = [];
-
       while (numbers.length < 6) {
         const number = Math.floor(Math.random() * 45) + 1;
-
         if (!numbers.includes(number)) {
           numbers.push(number);
         }
       }
-
       return numbers.sort((a, b) => a - b);
     }
 
@@ -202,25 +424,38 @@
 
       for (let i = 1; i <= count; i++) {
         const numbers = getRandomNumbers();
+        const sum = numbers.reduce((acc, cur) => acc + cur, 0);
 
         const set = document.createElement("div");
         set.className = "lotto-set";
+        set.style.animationDelay = `${(i - 1) * 0.06}s`;
 
-        const title = document.createElement("div");
+        const header = document.createElement("div");
+        header.className = "set-header";
+
+        const title = document.createElement("span");
         title.className = "set-title";
-        title.textContent = `${i}번째 추천 번호`;
+        title.textContent = `${i}번째 세트`;
+
+        const sumText = document.createElement("span");
+        sumText.className = "set-sum";
+        sumText.textContent = `총합: ${sum}`;
+
+        header.appendChild(title);
+        header.appendChild(sumText);
 
         const numberBox = document.createElement("div");
         numberBox.className = "numbers";
 
-        numbers.forEach(number => {
+        numbers.forEach((number, idx) => {
           const ball = document.createElement("span");
           ball.className = `ball ${getBallColor(number)}`;
           ball.textContent = number;
+          ball.style.animationDelay = `${(i - 1) * 0.06 + idx * 0.05}s`;
           numberBox.appendChild(ball);
         });
 
-        set.appendChild(title);
+        set.appendChild(header);
         set.appendChild(numberBox);
         sets.appendChild(set);
       }
